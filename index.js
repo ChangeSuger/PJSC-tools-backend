@@ -1,6 +1,22 @@
-const express = require('express');
+import express from 'express';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+import yaml from 'js-yaml';
 
-const PORT = 4300;
+const CONFIG_FILENAME = 'config.yaml';
+
+const __indexFilePath = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__indexFilePath);
+
+const config = yaml.load(
+  fs.readFileSync(
+    path.join(__dirname, CONFIG_FILENAME),
+    'utf-8',
+  )
+);
+
+const { port: PORT } = config;
 
 const app = express();
 
