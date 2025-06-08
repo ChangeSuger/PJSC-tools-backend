@@ -12,7 +12,9 @@
   "dependencies": {
     "@gradio/client": "^1.15.1",
     "ali-oss": "^6.23.0",
+    "body-parser": "^2.2.0",
     "express": "^5.1.0",
-    "js-yaml": "^4.1.0"
+    "js-yaml": "^4.1.0",
+    "openai": "^5.1.1"
   }
 }
