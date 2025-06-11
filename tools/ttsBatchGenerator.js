@@ -1,8 +1,9 @@
 import { Client } from '@gradio/client';
 import OSS from 'ali-oss';
+import { sseMessageWrapper } from './sseMessageWrapper';
 
 const MAX_RETRY = 5;
-const BASE_DIR = 'pjsc-tts'
+const BASE_DIR = 'pjsc-tts';
 
 async function uploadFile(ossConfig, filename, audioBuffer) {
   const OSSClient = new OSS(ossConfig);
@@ -62,7 +63,10 @@ export async function ttsWavGenerate(config, exampleAudioBuffer, exampleText, ta
         const isExisted = await checkAudioFileExisted(ossConfig, filename);
 
         if (isExisted) {
-          res.write(`data: ${getAudioURL(ossConfig, filename)}\n\n`);
+          res.write(sseMessageWrapper({
+            code: 1,
+            url: getAudioURL(ossConfig, filename),
+          }));
         } else {
           const result = await app.predict(
             '/get_tts_wav',
@@ -92,8 +96,12 @@ export async function ttsWavGenerate(config, exampleAudioBuffer, exampleText, ta
 
           const resultURL = await uploadFile(ossConfig, filename, audioBuffer);
 
-          res.write(`data: ${resultURL}\n\n`);
+          res.write(sseMessageWrapper({
+            code: 1,
+            url: resultURL,
+          }));
         }
+
         batchCount++;
       }
     } catch (e) {

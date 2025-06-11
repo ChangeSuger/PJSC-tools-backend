@@ -6,8 +6,9 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import yaml from 'js-yaml';
 
-import { cn2jp } from './tools/cn2jp.js';
+// import { cn2jp } from './tools/cn2jp.js';
 import { ttsWavGenerate } from './tools/ttsBatchGenerator.js';
+import { sseMessageWrapper } from './tools/sseMessageWrapper.js';
 
 const CONFIG_FILENAME = 'config.yaml';
 
@@ -70,7 +71,9 @@ app.get('/api/tts-sse', async (req, res) => {
     'Connection': 'keep-alive',
   });
 
-  res.write('data: TTS Batch Generate Work Start!\n\n');
+  res.write(sseMessageWrapper({
+    code: 0,
+  }));
 
   await ttsWavGenerate(
     config,
@@ -82,24 +85,26 @@ app.get('/api/tts-sse', async (req, res) => {
 
   ttsTemp = undefined;
 
-  res.write('data: TTS Batch Generate Work End!\n\n');
+  res.write(sseMessageWrapper({
+    code: 2,
+  }));
 
   res.end();
 });
 
 // cn2jp
-app.post('/api/translate', async (req, res) => {
-  const { config, text } = req.body;
+// app.post('/api/translate', async (req, res) => {
+//   const { config, text } = req.body;
 
-  const result = await cn2jp(config, text);
+//   const result = await cn2jp(config, text);
 
-  res.status(200).json({ code: 200, data: result });
-});
+//   res.status(200).json({ code: 200, data: result });
+// });
 
 // emotion labeling
-app.post('/api/emotion', (req, res) => {
+// app.post('/api/emotion', (req, res) => {
 
-});
+// });
 
 app.listen(PORT, () => {
   console.log(`PJSC Tools Backend listening on port ${PORT}`);
