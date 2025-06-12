@@ -1,6 +1,6 @@
 import { Client } from '@gradio/client';
 import OSS from 'ali-oss';
-import { sseMessageWrapper } from './sseMessageWrapper';
+import { sseMessageWrapper } from './sseMessageWrapper.js';
 
 const MAX_RETRY = 5;
 const BASE_DIR = 'pjsc-tts';
@@ -106,6 +106,9 @@ export async function ttsWavGenerate(config, exampleAudioBuffer, exampleText, ta
       }
     } catch (e) {
       console.log(e);
+      res.write(sseMessageWrapper({
+        code: -1,
+      }));
       retryCount++;
     }
   }
