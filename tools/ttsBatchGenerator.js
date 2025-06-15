@@ -31,7 +31,7 @@ async function checkAudioFileExisted(ossConfig, filename) {
 function getAudioURL(ossConfig, filename) {
   const { region, bucket } = ossConfig;
 
-  return `https//${bucket}.${region}.aliyuncs.com/${BASE_DIR}/${filename}`;
+  return `https://${bucket}.${region}.aliyuncs.com/${BASE_DIR}/${filename}`;
 }
 
 export async function ttsWavGenerate(config, exampleAudioBuffer, exampleText, targetText, res) {
