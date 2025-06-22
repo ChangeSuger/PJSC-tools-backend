@@ -36,7 +36,7 @@ function getAudioURL(ossConfig, filename) {
 
 export async function ttsWavGenerate(config, exampleAudioBuffer, exampleText, targetText, res) {
   const { ossConfig, ttsConfig } = config;
-  const { text, id } = targetText;
+  const { text, id, lang: targetLang } = targetText;
 
   const {
     baseURL,
@@ -72,10 +72,10 @@ export async function ttsWavGenerate(config, exampleAudioBuffer, exampleText, ta
             '/get_tts_wav',
             [
               exampleAudioBuffer,
-              exampleText,
-              '日文',
+              exampleText.text,
+              exampleText.lang,
               text,
-              '日文',
+              targetLang,
               sliceMethod,
               topK,
               topP,

@@ -36,12 +36,13 @@ app.post('/api/tts', upload.single('exampleAudio'), async (req, res) => {
   const {
     ttsConfig: ttsConfigString,
     ossConfig: ossConfigString,
-    exampleText,
+    exampleText: exampleTextString,
     targetText: targetTextString,
   } = req.body;
 
   const ttsConfig = JSON.parse(ttsConfigString);
   const ossConfig = JSON.parse(ossConfigString);
+  const exampleText = JSON.parse(exampleTextString);
   const targetText = JSON.parse(targetTextString);
 
   const exampleAudioBuffer = req.file.buffer;
