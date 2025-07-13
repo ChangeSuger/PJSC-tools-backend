@@ -1,37 +1,57 @@
 import { Client } from '@gradio/client';
 import OSS from 'ali-oss';
 import { sseMessageWrapper } from './sseMessageWrapper.js';
+import { existsSync, writeFileSync } from 'fs';
+import path from 'path';
 
 const MAX_RETRY = 5;
 const BASE_DIR = 'pjsc-tts';
 
 async function uploadFile(ossConfig, filename, audioBuffer) {
-  const OSSClient = new OSS(ossConfig);
+  // const OSSClient = new OSS(ossConfig);
 
-  const OSSResult = await OSSClient.put(`${BASE_DIR}/${filename}`, audioBuffer);
+  // const OSSResult = await OSSClient.put(`${BASE_DIR}/${filename}`, audioBuffer);
 
-  if (OSSResult.res.status === 200) {
-    return OSSResult.url;
-  } else {
-    return;
-  }
+  // if (OSSResult.res.status === 200) {
+  //   return OSSResult.url;
+  // } else {
+  //   return;
+  // }
+
+  writeFileSync(
+    path.join(
+      'F:\\Github\\PJSC-tools-backend',
+      'audio',
+      filename,
+    ),
+    audioBuffer,
+  );
+
+  return `/api/audio/${filename}`;
 }
 
 async function checkAudioFileExisted(ossConfig, filename) {
-  const OSSClient = new OSS(ossConfig);
+  // const OSSClient = new OSS(ossConfig);
 
-  try {
-    await OSSClient.head(`pjsc-tts/${filename}`);
+  // try {
+  //   await OSSClient.head(`pjsc-tts/${filename}`);
+  //   return true;
+  // } catch (e) {
+  //   return false;
+  // }
+
+  if (existsSync(path.join('F:\\Github\\PJSC-tools-backend', 'audio', filename))) {
     return true;
-  } catch (e) {
+  } else {
     return false;
   }
 }
 
 function getAudioURL(ossConfig, filename) {
-  const { region, bucket } = ossConfig;
+  // const { region, bucket } = ossConfig;
 
-  return `https://${bucket}.${region}.aliyuncs.com/${BASE_DIR}/${filename}`;
+  // return `https://${bucket}.${region}.aliyuncs.com/${BASE_DIR}/${filename}`;
+  return `/api/audio/${filename}`;
 }
 
 export async function ttsWavGenerate(config, exampleAudioBuffer, exampleText, targetText, res) {

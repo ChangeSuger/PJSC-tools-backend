@@ -107,6 +107,18 @@ app.get('/api/tts-sse', async (req, res) => {
 
 // });
 
+app.get('/api/audio/:audioName', async (req, res) => {
+  const { audioName } = req.params;
+
+  const fileBuffer = await fs.promises.readFile(path.join(
+    __dirname,
+    'audio',
+    audioName,
+  ));
+
+  res.send(fileBuffer);
+});
+
 app.listen(PORT, () => {
   console.log(`PJSC Tools Backend listening on port ${PORT}`);
 });
