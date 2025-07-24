@@ -5,8 +5,8 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import yaml from 'js-yaml';
+import { Client } from "@gradio/client";
 
-// import { cn2jp } from './tools/cn2jp.js';
 import { ttsWavGenerate } from './tools/ttsBatchGenerator.js';
 import { sseMessageWrapper } from './tools/sseMessageWrapper.js';
 
@@ -93,19 +93,47 @@ app.get('/api/tts-sse', async (req, res) => {
   res.end();
 });
 
-// cn2jp
-// app.post('/api/translate', async (req, res) => {
-//   const { config, text } = req.body;
+app.post('/api/change_choices', async (req, res) => {
+  const { url } = req.body;
 
-//   const result = await cn2jp(config, text);
+  const app = await Client.connect(url);
 
-//   res.status(200).json({ code: 200, data: result });
-// });
+  const result = await app.predict("/change_choices", []);
 
-// emotion labeling
-// app.post('/api/emotion', (req, res) => {
+  res.status(200).json({
+    code: 200,
+    data: result.data,
+  });
+});
 
-// });
+app.post('/api/change_model', async (req, res) => {
+  const {
+    url,
+    sovitsModel,
+    gptModel,
+    originLang,
+    targetLang,
+  } = req.body;
+
+  const app = await Client.connect(url);
+
+  const result1 = await app.predict("/change_sovits_weights", [
+    sovitsModel,
+    originLang,
+    targetLang,
+  ]);
+
+  const result2 = await app.predict("/change_gpt_weights", [
+    gptModel,
+    originLang,
+    targetLang,
+  ]);
+
+  res.status(200).json({
+    code: 200,
+    data: [result1.data, result2.data],
+  });
+});
 
 app.get('/api/audio/:audioName', async (req, res) => {
   const { audioName } = req.params;

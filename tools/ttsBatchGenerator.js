@@ -20,7 +20,6 @@ async function uploadFile(ossConfig, filename, audioBuffer) {
 
   writeFileSync(
     path.join(
-      'F:\\Github\\PJSC-tools-backend',
       'audio',
       filename,
     ),
@@ -40,7 +39,7 @@ async function checkAudioFileExisted(ossConfig, filename) {
   //   return false;
   // }
 
-  if (existsSync(path.join('F:\\Github\\PJSC-tools-backend', 'audio', filename))) {
+  if (existsSync(path.join('audio', filename))) {
     return true;
   } else {
     return false;

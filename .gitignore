@@ -1,3 +1,5 @@
 node_modules
 temps
 audio
+
+.DS_Store
