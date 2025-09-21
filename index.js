@@ -47,14 +47,31 @@ app.post('/api/tts', upload.single('exampleAudio'), async (req, res) => {
 
   const exampleAudioBuffer = req.file.buffer;
 
-  ttsTemp = {
-    config: { ttsConfig, ossConfig },
+  const config = { ttsConfig, ossConfig };
+
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache',
+    'Connection': 'keep-alive',
+  });
+
+  res.write(sseMessageWrapper({
+    code: 0,
+  }));
+
+  await ttsWavGenerate(
+    config,
     exampleAudioBuffer,
     exampleText,
     targetText,
-  };
+    res,
+  );
 
-  res.status(200).json({ code: 200, message: 'Success' });
+  res.write(sseMessageWrapper({
+    code: 2,
+  }));
+
+  res.end();
 });
 
 //tts sse

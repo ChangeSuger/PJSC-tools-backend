@@ -11,8 +11,8 @@ import {
 import { fileURLToPath } from 'url';
 // import OSS from 'ali-oss';
 
-const senarioName = 'temps';
-const scriptName = 'temps.tts.checked.json';
+const senarioName = 'X-3';
+const scriptName = `${senarioName}.tts.checked.json`;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -40,25 +40,6 @@ const story = JSON.parse(
 
 for (const item of story) {
   if (item.type === 'line') {
-    if (item.cnAudioURL) {
-      const fileBuffer = await fs.readFile(path.join(
-        __dirname,
-        'audio',
-        item.cnAudioURL.split('/').pop(),
-      ));
-
-      writeFileSync(
-        path.join(
-          __dirname,
-          'temps',
-          senarioName,
-          'CN',
-          `${senarioName}_${item.id}_cn.wav`
-        ),
-        fileBuffer,
-      );
-    }
-
     if (item.jpAudioURL) {
       const fileBuffer = await fs.readFile(path.join(
         __dirname,
@@ -71,7 +52,6 @@ for (const item of story) {
           __dirname,
           'temps',
           senarioName,
-          'JP',
           `${senarioName}_${item.id}_jp.wav`
         ),
         fileBuffer,
